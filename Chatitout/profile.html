@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <title>Profile - Chat It Out</title>
+        <link rel="icon" type="image/png" href="assets/img/images/icon.png" />
+        <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+        <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
+        <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+        <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+        <script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-database.js"></script>
+        <link rel="stylesheet" media="screen" href="assets/css/style.css">
+        <script>
+            // Firebase configuration
+            const firebaseConfig = {
+              apiKey: "AIzaSyAPBObzPsJY1wTKeaTZUbheREDGM2p7Iww",
+              authDomain: "chat-it-out-69.firebaseapp.com",
+              databaseURL: "https://chat-it-out-69-default-rtdb.asia-southeast1.firebasedatabase.app",
+              projectId: "chat-it-out-69",
+              storageBucket: "chat-it-out-69.appspot.com",
+              messagingSenderId: "834288617537",
+              appId: "1:834288617537:web:47c5391ccc7d16ef409ec0"
+            };
+    
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+    
+    
+            // Get user data from database
+            const database = firebase.database();
+            const userRef = firebase.database().ref("users/");
+    
+            firebase.auth().onAuthStateChanged(user => {
+                if (user) {
+                    // User is signed in
+                    const userId = user.uid;
+    
+                    // Set up a reference to the user's data in the database
+                    const currentUserRef = userRef.child(userId);
+    
+                    // Fetch the user's data from the database
+                    currentUserRef.once("value").then(snapshot => {
+                        const userData = snapshot.val();
+    
+                        // Populate the input fields with the user's data
+                        document.getElementById("firstName").value = userData.firstName;
+                        document.getElementById("lastName").value = userData.lastName;
+                        document.getElementById("username").value = userData.username;
+                    });
+                } else {
+                    // User is not signed in
+                    window.location = "index.html";
+                }
+            });
+    
+            // Handle save button click
+            function saveChanges() {
+                const newFirstName = document.getElementById("firstName").value;
+                const newLastName = document.getElementById("lastName").value;
+                const newUsername = document.getElementById("username").value;
+    
+                // Update user data in database
+                const userId = firebase.auth().currentUser.uid;
+                const currentUserRef = userRef.child(userId);
+                currentUserRef.update({
+                    firstName: newFirstName,
+                    lastName: newLastName,
+                    username: newUsername
+                })
+                    .then(() => {
+                        alert("Changes saved successfully!");
+                    })
+                    .catch((error) => {
+                        alert(error.message);
+                    });
+            }
+    
+        </script>
+        <style>
+            header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background-color: #005555;
+                color: #FFF;
+                height: 80px;
+            }
+            .btn-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 40px;
+            }
+            .btn-container a {
+                display: inline-block;
+                background-color: #2F4F4F;
+                color: #FFF;
+                padding: 10px 20px;
+                border-radius: 5px;
+                margin: 0 10px;
+                text-decoration: none;
+                font-weight: bold;
+                transition: all 0.3s ease-in-out;
+            }
+            .btn-container a:hover {
+                background-color: #FFF;
+                color: #2F4F4F;
+                border: 1px solid #2F4F4F;
+            }
+            .logo-img {
+                max-width: 150px; /* Adjust the value as needed to control the size of the logo */
+                height: auto; /* This will maintain the aspect ratio of the image */
+            }
+        </style>
+    </head>
+<body>
+    <header>
+        <a href="index.html"><img src="assets/img/images/logo2.png" alt="Chat It Out Logo" class="logo-img"></a>
+        <div class="btn-container">
+            <a href="profile.html">Profile</a>
+            <a href="#" id="logoutButton" onclick="logout()">Logout</a>
+        </div>
+    </header>
+    
+      
+      <!-- particles.js container -->
+      <div id="particles-js"></div>
+      
+      <!-- scripts -->
+      <script src="assets/js/particles.js"></script>
+      <script src="assets/js/app.js"></script>
+
+    <div class="container">
+        <div class="card shadow-lg o-hidden border-0 my-5">
+            <div class="card-body p-0">
+                <div class="row">
+                    <div class="col-lg-5 d-none d-lg-flex"><img class="d-xl-flex justify-content-center align-items-center align-content-center align-self-center mx-auto justify-content-xl-center align-items-xl-center" src="assets/img/images/logo-dark.png" style="width: 367px;height: 367px;"></div>
+                    <div class="col-lg-7">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h4 class="text-dark mb-4">Edit Your Details!</h4>
+                            </div>
+                                <div class="form-group">
+                                    <input class="form-control form-control-user" type="text" id="username" aria-describedby="" placeholder="User Name" name="username" style="margin-top: 17px;" required>
+                                    <input class="form-control form-control-user" type="text" id="firstName" aria-describedby="" placeholder="First Name" name="firstName" style="margin-top: 17px;" required>
+                                    <input class="form-control form-control-user" type="text" id="lastName" aria-describedby="" placeholder="Last Name" name="lastName" style="margin-top: 17px;" required>
+                                </div>
+                                <button class="btn btn-primary btn-block text-white btn-user" type="submit" onclick="saveChanges()">Save Changes to your Account</button>
+                        
+                                <hr>
+                                <div class="text-center"><a class="small" href="forgot-password.html">Want to change password?</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function logout() {
+            firebase.auth().signOut()
+            .then(() => {
+                console.log("User logged out successfully");
+                // Perform any other actions or redirect as needed after logout
+            })
+            .catch(error => {
+                console.error("Error logging out:", error);
+            });
+        }
+    </script>
+</body>
+
+</html>

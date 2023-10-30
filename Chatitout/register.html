@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <title>Register - Chat It Out</title>
+        <link rel="icon" type="image/png" href="assets/img/images/icon.png" />
+        <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+        <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
+        <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+        <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+        <script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-database.js"></script>
+        <link rel="stylesheet" media="screen" href="assets/css/style.css">
+        <script>
+            const firebaseConfig = {
+            apiKey: "AIzaSyAPBObzPsJY1wTKeaTZUbheREDGM2p7Iww",
+            authDomain: "chat-it-out-69.firebaseapp.com",
+            databaseURL: "https://chat-it-out-69-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "chat-it-out-69",
+            storageBucket: "chat-it-out-69.appspot.com",
+            messagingSenderId: "834288617537",
+            appId: "1:834288617537:web:47c5391ccc7d16ef409ec0"
+            };
+            firebase.initializeApp(firebaseConfig);
+        
+            function register() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const firstName = document.getElementById("firstName").value;
+            const lastName = document.getElementById("lastName").value;
+            const username = document.getElementById("username").value;
+            
+            // Check if username already exists
+            firebase.database().ref('users').orderByChild('username').equalTo(username).once('value')
+                .then((snapshot) => {
+                if (snapshot.exists()) {
+                    alert("Username already taken. Please choose a different username.");
+                    return;
+                } else {
+                    // Create new user
+                    firebase.auth().createUserWithEmailAndPassword(email, password)
+                    .then((userCredential) => {
+                        // Signed in
+                        const user = userCredential.user;
+                        user.updateProfile({
+                        displayName: username
+                        })
+                        console.log(user);
+                        // Save user data to Firebase Realtime Database
+                        firebase.database().ref('users/' + user.uid).set({
+                        email: email,
+                        firstName: firstName,
+                        lastName: lastName,
+                        username: username
+                        });
+                    })
+                    .catch((error) => {
+                        const errorCode = error.code;
+                        const errorMessage = error.message;
+                        alert(errorCode, errorMessage)
+
+                    });
+                }
+                });
+            }
+        
+            // Check if a user is logged in on page load
+            firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                // User is signed in
+                setTimeout(function() {
+                window.location.href = "home.html";
+                }, 2000);
+            } else {
+                // No user is signed in
+            }
+            });
+        </script>
+        <style>
+            header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background-color: #005555;
+                color: #FFF;
+                height: 80px;
+            }
+            .btn-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 40px;
+            }
+            .btn-container a {
+                display: inline-block;
+                background-color: #2F4F4F;
+                color: #FFF;
+                padding: 10px 20px;
+                border-radius: 5px;
+                margin: 0 10px;
+                text-decoration: none;
+                font-weight: bold;
+                transition: all 0.3s ease-in-out;
+            }
+            .btn-container a:hover {
+                background-color: #FFF;
+                color: #2F4F4F;
+                border: 1px solid #2F4F4F;
+            }
+            .logo-img {
+                max-width: 150px; /* Adjust the value as needed to control the size of the logo */
+                height: auto; /* This will maintain the aspect ratio of the image */
+            }
+        </style>
+    </head>
+<body>
+    <header>
+        <a href="index.html"><img src="assets/img/images/logo2.png" alt="Chat It Out Logo" class="logo-img"></a>
+        <div class="btn-container">
+            <a href="login.html">Login</a>
+            <a href="register.html">Register</a>
+        </div>
+    </header>
+    
+      
+      <!-- particles.js container -->
+      <div id="particles-js"></div>
+      
+      <!-- scripts -->
+      <script src="assets/js/particles.js"></script>
+      <script src="assets/js/app.js"></script>
+
+    <div class="container">
+        <div class="card shadow-lg o-hidden border-0 my-5">
+            <div class="card-body p-0">
+                <div class="row">
+                    <div class="col-lg-5 d-none d-lg-flex"><img class="d-xl-flex justify-content-center align-items-center align-content-center align-self-center mx-auto justify-content-xl-center align-items-xl-center" src="assets/img/images/logo-dark.png" style="width: 367px;height: 367px;"></div>
+                    <div class="col-lg-7">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h4 class="text-dark mb-4">Create an Account!</h4>
+                            </div>
+                                <div class="form-group">
+                                    <input class="form-control form-control-user" type="text" id="username" aria-describedby="" placeholder="User Name" name="username" style="margin-top: 17px;" required>
+                                    <input class="form-control form-control-user" type="text" id="firstName" aria-describedby="" placeholder="First Name" name="firstName" style="margin-top: 17px;" required>
+                                    <input class="form-control form-control-user" type="text" id="lastName" aria-describedby="" placeholder="Last Name" name="lastName" style="margin-top: 17px;" required>
+                                    <input class="form-control form-control-user" type="email" id="email" aria-describedby="" placeholder="Email Address" name="email" style="margin-top: 17px;" required>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0"><input class="form-control form-control-user" type="password" id="password" placeholder="Password" name="password"></div>
+                                    <div class="col-sm-6"><input class="form-control form-control-user" type="password" id="cpass" placeholder="Confirm Password" name="password_confirm"></div>
+                                </div><button class="btn btn-primary btn-block text-white btn-user" type="submit" onclick="register()">Register Account</button>
+                        
+                                <hr>
+                            <div class="text-center"></div>
+                            <div class="text-center"><a class="small" href="login.html">Already have an account? Login!</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
